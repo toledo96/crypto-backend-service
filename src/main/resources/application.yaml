@@ -8,3 +8,12 @@ spring:
 
 coingecko:
   api-key: ${COINGECKO_API_KEY:COINGECKO_KEY_NOT_FOUND}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}

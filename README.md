@@ -98,3 +98,68 @@ git clone [https://github.com/toledo96/crypto-backend-service.git]
  ```Bash
 ./mvnw spring-boot:run
  ```
+
+## 💾 Configuración y Monitoreo de Caché (Redis)
+
+Para optimizar los tiempos de respuesta del microservicio y mitigar el límite de peticiones (rate limiting) de las APIs externas, el proyecto implementa un mecanismo de caché distribuida utilizando **Redis**.
+
+### 🛠️ Arquitectura de la Caché
+* **Redis Caching:** Almacenamiento temporal de consultas de alta demanda.
+* **Resiliencia de Conexión:** Configuración externalizada con valores por defecto preparados para despliegues locales y entornos contenerizados.
+
+### 📈 Métricas de Redis en Grafana
+Al habilitar las métricas de Spring Boot, el tablero de Grafana monitorea automáticamente el comportamiento del cliente de Redis (Lettuce/Jedis) y el pool de conexiones:
+* **HikariCP / Connection Pool:** Estado de las conexiones activas, inactivas y tiempos de espera para interactuar con la base de datos en memoria.
+* **Cache Hits / Misses:** Volumen de consultas exitosas recuperadas desde la caché versus peticiones que requirieron golpear el backend o servicios externos.
+
+### 🚀 Configuración del Entorno (`application.yml`)
+La conectividad se gestiona de manera dinámica para facilitar la portabilidad del entorno de desarrollo a Docker:
+
+```yaml
+spring:
+   data:
+      redis:
+         host: ${REDIS_HOST:localhost}
+         port: ${REDIS_PORT:6379}
+```
+
+## 📊 Observabilidad y Monitoreo
+
+El proyecto cuenta con una infraestructura completa de monitoreo para evaluar el rendimiento y la salud del microservicio en tiempo real utilizando el stack **Prometheus** y **Grafana**.
+
+### 🛠️ Tecnologías Utilizadas
+* **Spring Boot Actuator & Micrometer:** Para la exposición y recolección nativa de métricas de la JVM, Tomcat y conexiones.
+* **Prometheus:** Servidor de series temporales encargado de realizar el *scraping* de las métricas expuestas.
+* **Grafana:** Panel de control visual conectado a Prometheus para la representación gráfica del estado del sistema.
+
+### 📈 Métricas Monitoreadas
+* **JVM memory:** Uso y comportamiento de la memoria *Heap* y *Non-Heap*.
+* **CPU Usage & Load Average:** Monitoreo del consumo de procesamiento del microservicio.
+* **Tomcat Threads:** Hilos activos, ocupados y disponibles en el servidor embebido.
+* **EasyBroker / Redis Integrations:** Comportamiento de las conexiones externas y almacenamiento en caché.
+
+### 🚀 Cómo Levantar el Entorno de Monitoreo
+
+1. **Asegurar las variables en el `application.yml`**
+   El sistema inyecta automáticamente el tag de la aplicación para que Grafana lo reconozca de manera nativa:
+
+```yaml
+   management:
+     endpoints:
+       web:
+         exposure:
+           include: health, info, prometheus
+     metrics:
+       tags:
+         application: ${spring.application.name}
+```
+
+2. **Levantar los contenedores de Docker**
+   Ejecuta el siguiente comando en la raíz del proyecto para iniciar Prometheus y Grafana en segundo plano:
+```
+docker compose up -d
+```
+
+3. **Acceso a herramientas**
+   - Prometheus UI: http://localhost:9090 (Verifica el estado en Status -> Targets).
+   - Grafana Dashboard: http://localhost:3000 (Importa el tablero con el ID 11378 y selecciona el datasource de Prometheus).
