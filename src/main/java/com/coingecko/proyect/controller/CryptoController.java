@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/crypto")
-@CrossOrigin(origins = "*") // Listo para conectarse con React sin problemas de CORS
+@CrossOrigin(origins = "${app.cors.allowed-origins:http://localhost:5173}")
 public class CryptoController {
 
     private final CryptoService cryptoService;
