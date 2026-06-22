@@ -163,3 +163,7 @@ docker compose up -d
 3. **Acceso a herramientas**
    - Prometheus UI: http://localhost:9090 (Verifica el estado en Status -> Targets).
    - Grafana Dashboard: http://localhost:3000 (Importa el tablero con el ID 11378 y selecciona el datasource de Prometheus).
+
+### 🔗 Proyecto Completo (Arquitectura Fullstack) 
+Este frontend requiere del ecosistema backend para funcionar. Puedes consultar el repositorio del servidor, 
+la lógica de caché en Redis y las pruebas unitarias aquí: 👉 [https://github.com/toledo96/crypto-backend-service]
