@@ -165,5 +165,5 @@ docker compose up -d
    - Grafana Dashboard: http://localhost:3000 (Importa el tablero con el ID 11378 y selecciona el datasource de Prometheus).
 
 ### 🔗 Proyecto Completo (Arquitectura Fullstack) 
-Este frontend requiere del ecosistema backend para funcionar. Puedes consultar el repositorio del servidor, 
-la lógica de caché en Redis y las pruebas unitarias aquí: 👉 [https://github.com/toledo96/crypto-backend-service]
+Este proyecto cuenta con un servicio frontend desarrollado en React que consume esta API, mostrando la información 
+de criptomonedas de manera visual e interactiva aquí: 👉 [https://github.com/toledo96/crypto-frontend-service]
